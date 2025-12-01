@@ -3,8 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <base href="./" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Tolosa Hiribusa</title>
+    
+    <!-- Configuración iOS Web App -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Tolosa Bus">
+
+    <!-- Favicon (Bus blanco sobre fondo Cian) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iIzA2YjZkNCIvPjxwYXRoIGZpbGw9IndoaXRlIiBkPSJNMTMzIDEwNWMtMjUuNyA1LjItNDUgMjguMy00NSA1NXYyMjRjMCAxNy43IDE0LjMgMzIgMzIgMzJoMTZ2NDhjMCA4LjggNy4yIDE2IDE2IDE2aDMyYzguOCAwIDE2LTcuMiAxNi0xNnYtNDhoMTEyVjQ2NGMwIDguOCA3LjIgMTYgMTYgMTZoMzJjOC44IDAgMTYtNy4yIDE2LTE2di00OGgxNmMxNy43IDAgMzItMTQuMyAzMi0zMlYxNjBjMC0yNi43LTE5LjMtNDkuOC00NS01NWwtMTYtMy4zVjY0YzAtMTcuNy0xNC4zLTMyLTMyLTMySDE0OGMtMTcuNyAwLTMyIDE0LjMtMzIgMzJ2Mzc3bC0xNiAzLjN6bTMyIDE1MWgyODh2LTk2SDE2NXY5NnoiLz48L3N2Zz4=" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iIzA2YjZkNCIvPjxwYXRoIGZpbGw9IndoaXRlIiBkPSJNMTMzIDEwNWMtMjUuNyA1LjItNDUgMjguMy00NSA1NXYyMjRjMCAxNy43IDE0LjMgMzIgMzIgMzJoMTZ2NDhjMCA4LjggNy4yIDE2IDE2IDE2aDMyYzguOCAwIDE2LTcuMiAxNi0xNnYtNDhoMTEyVjQ2NGMwIDguOCA3LjIgMTYgMTYgMTZoMzJjOC44IDAgMTYtNy4yIDE2LTE2di00OGgxNmMxNy43IDAgMzItMTQuMyAzMi0zMlYxNjBjMC0yNi43LTE5LjMtNDkuOC00NS01NWwtMTYtMy4zVjY0YzAtMTcuNy0xNC4zLTMyLTMyLTMySDE0OGMtMTcuNyAwLTMyIDE0LjMtMzIgMzJ2Mzc3bC0xNiAzLjN6bTMyIDE1MWgyODh2LTk2SDE2NXY5NnoiLz48L3N2Zz4=" />
     
     <!-- React & ReactDOM (UMD - Versión estándar para navegadores) -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -48,7 +57,7 @@
         animation: fadeInUp 0.4s ease-out forwards;
       }
     </style>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
     "react": "https://aistudiocdn.com/react@^19.2.0",
@@ -91,6 +100,42 @@ Kondeaneko Aldapa 3, 7:42, 8:09, 8:46, 9:32, 10:07, 10:42, 11:47, 12:22, 12:57, 
 Santa Klara, 7:43, 8:47, 9:33, 10:08, 10:43, 11:48, 12:23, 12:58, 13:33, 14:08, 14:49, 15:28, 16:05, 16:40, 17:17, 17:52, 18:44, 19:19, 19:54, 20:29, 20:59, 21:28;
 Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:50, 15:29, 16:06, 16:41, 17:18, 17:53, 18:45, 19:20, 19:55, 20:30, 21:00, 21:29;`;
 
+      // --- TRANSLATIONS ---
+      const TRANSLATIONS = {
+        ES: {
+          title: "Tolosa Hiribusa",
+          selectLabel: "Seleccionar Parada",
+          chooseOption: "-- Elige una parada --",
+          nextBus: "Próximo Autobús",
+          serviceStatus: "Estado del Servicio",
+          outOfService: "Fuera de servicio",
+          atStop: "En parada:",
+          approaching: "Llegando a:",
+          noMoreBuses: "No hay más salidas hoy",
+          scheduleTitle: "Horario del día",
+          noSchedule: "No hay horarios disponibles.",
+          selectPrompt: "Selecciona una parada para ver la información en tiempo real.",
+          footer: "Autobús Urbano de Tolosa",
+          now: "Ahora"
+        },
+        EU: {
+          title: "Tolosa Hiribusa",
+          selectLabel: "Geltokia Aukeratu",
+          chooseOption: "-- Aukeratu geltoki bat --",
+          nextBus: "Hurrengo Autobusa",
+          serviceStatus: "Zerbitzuaren Egoera",
+          outOfService: "Zerbitzuz kanpo",
+          atStop: "Geltokian:",
+          approaching: "Iristen:",
+          noMoreBuses: "Ez dago irteera gehiago gaur",
+          scheduleTitle: "Eguneko Ordutegia",
+          noSchedule: "Ez dago ordutegirik eskuragarri.",
+          selectPrompt: "Aukeratu geltoki bat denbora errealeko informazioa ikusteko.",
+          footer: "Tolosako Hiribusa",
+          now: "Orain"
+        }
+      };
+
       // --- UTILS ---
       const timeToMinutes = (timeStr) => {
         const [hours, minutes] = timeStr.split(':').map(Number);
@@ -127,8 +172,8 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
         return events.sort((a, b) => a.minutesFromMidnight - b.minutesFromMidnight);
       };
 
-      const formatTimeRemaining = (minutes) => {
-        if (minutes === 0) return "Ahora";
+      const formatTimeRemaining = (minutes, t) => {
+        if (minutes === 0) return t.now;
         if (minutes < 60) return `${minutes} min`;
         const hrs = Math.floor(minutes / 60);
         const mins = minutes % 60;
@@ -138,7 +183,7 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
       // --- COMPONENTS ---
 
       // StopSelect Component
-      const StopSelect = ({ stops, selectedStopId, onSelect }) => {
+      const StopSelect = ({ stops, selectedStopId, onSelect, t }) => {
         const handleChange = (e) => {
           onSelect(Number(e.target.value));
         };
@@ -146,7 +191,7 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
         return (
           <div className="w-full mb-6">
             <label htmlFor="stop-select" className="block text-sm font-medium text-slate-700 mb-2">
-              Seleccionar Parada
+              {t.selectLabel}
             </label>
             <div className="relative">
               <select
@@ -155,7 +200,7 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
                 onChange={handleChange}
                 className="block w-full appearance-none rounded-lg border border-slate-300 bg-white px-4 py-3 pr-8 text-base shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm text-slate-800"
               >
-                <option value="" disabled>-- Elige una parada --</option>
+                <option value="" disabled>{t.chooseOption}</option>
                 {stops.map((stop) => (
                   <option key={stop.id} value={stop.id}>
                     {stop.name}
@@ -173,24 +218,24 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
       };
 
       // NextBusCard Component
-      const NextBusCard = ({ nextTime, currentMinutes, globalStatus }) => {
+      const NextBusCard = ({ nextTime, currentMinutes, globalStatus, t }) => {
         if (!nextTime) {
           return (
             <div className="w-full bg-slate-200 rounded-2xl p-6 mb-6 text-center shadow-inner">
-              <p className="text-slate-500 font-medium">No hay más salidas hoy</p>
+              <p className="text-slate-500 font-medium">{t.noMoreBuses}</p>
             </div>
           );
         }
 
         const arrivalMinutes = timeToMinutes(nextTime);
         const diff = arrivalMinutes - currentMinutes;
-        const timeRemainingStr = formatTimeRemaining(diff);
+        const timeRemainingStr = formatTimeRemaining(diff, t);
 
         return (
           <div className="w-full bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl p-6 mb-6 text-white shadow-lg relative overflow-hidden">
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-2">
-                <span className="text-primary-100 font-medium text-sm uppercase tracking-wide">Próximo Autobús</span>
+                <span className="text-primary-100 font-medium text-sm uppercase tracking-wide">{t.nextBus}</span>
                 <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-semibold shadow-sm">
                   {timeRemainingStr}
                 </div>
@@ -208,17 +253,17 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
                       <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
                     </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-primary-100 font-medium uppercase mb-0.5">Estado del Servicio</p>
+                    <p className="text-xs text-primary-100 font-medium uppercase mb-0.5">{t.serviceStatus}</p>
                     <p className="text-sm font-bold truncate leading-tight">
-                      {globalStatus.status === 'FINISHED' && "Fuera de servicio"}
+                      {globalStatus.status === 'FINISHED' && t.outOfService}
                       {globalStatus.status === 'AT_STOP' && (
                         <span>
-                          En parada: <span className="text-white">{globalStatus.targetStopName}</span>
+                          {t.atStop} <span className="text-white">{globalStatus.targetStopName}</span>
                         </span>
                       )}
                       {globalStatus.status === 'APPROACHING' && (
                         <span>
-                          Llegando a: <span className="text-white">{globalStatus.targetStopName}</span>
+                          {t.approaching} <span className="text-white">{globalStatus.targetStopName}</span>
                         </span>
                       )}
                     </p>
@@ -231,7 +276,7 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
       };
 
       // ScheduleGrid Component
-      const ScheduleGrid = ({ times, currentMinutes }) => {
+      const ScheduleGrid = ({ times, currentMinutes, t }) => {
         const isPast = (time) => timeToMinutes(time) < currentMinutes;
 
         return (
@@ -240,7 +285,7 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
               <svg className="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Horario del día
+              {t.scheduleTitle}
             </h3>
             <div className="grid grid-cols-4 gap-3 sm:grid-cols-6 md:grid-cols-8">
               {times.map((time, idx) => {
@@ -261,7 +306,7 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
               })}
             </div>
             {times.length === 0 && (
-              <p className="text-slate-400 text-center text-sm py-4">No hay horarios disponibles.</p>
+              <p className="text-slate-400 text-center text-sm py-4">{t.noSchedule}</p>
             )}
           </div>
         );
@@ -272,6 +317,16 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
         const [stops, setStops] = useState([]);
         const [selectedStopId, setSelectedStopId] = useState(null);
         const [currentMinutes, setCurrentMinutes] = useState(getCurrentMinutes());
+        // Language state initialized from LocalStorage
+        const [lang, setLang] = useState(() => localStorage.getItem('app_lang') || 'ES');
+
+        const t = TRANSLATIONS[lang];
+
+        const toggleLang = () => {
+          const newLang = lang === 'ES' ? 'EU' : 'ES';
+          setLang(newLang);
+          localStorage.setItem('app_lang', newLang);
+        };
 
         useEffect(() => {
           const parsedData = parseBusData(RAW_BUS_DATA);
@@ -322,13 +377,23 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
           <div className="min-h-screen bg-slate-50 flex flex-col items-center">
             {/* Header */}
             <header className="w-full bg-primary-600 text-white shadow-md sticky top-0 z-50">
-              <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-center relative">
+              <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between relative">
                   <h1 className="text-xl font-bold tracking-tight flex items-center gap-2">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    {/* Bus Icon */}
+                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" style={{display: 'none'}} />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 17a2.5 2.5 0 11-5.071 0 2.5 2.5 0 015.071 0zm-12.071 0a2.5 2.5 0 115.071 0 2.5 2.5 0 01-5.071 0zm14.858-6h-16.572l.828-5.8c.206-1.442 1.455-2.5 2.914-2.5h9.056c1.46 0 2.708 1.058 2.914 2.5l.86 6.023zM5 11h14v6H5v-6z" />
                     </svg>
-                    Tolosa Hiribusa
+                    {t.title}
                   </h1>
+                  
+                  {/* Language Switcher */}
+                  <button 
+                    onClick={toggleLang}
+                    className="text-xs font-bold bg-white/20 hover:bg-white/30 transition-colors rounded px-2 py-1 border border-white/40"
+                  >
+                    {lang === 'ES' ? 'EU' : 'ES'}
+                  </button>
               </div>
             </header>
 
@@ -338,7 +403,8 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
               <StopSelect 
                 stops={stops} 
                 selectedStopId={selectedStopId} 
-                onSelect={setSelectedStopId} 
+                onSelect={setSelectedStopId}
+                t={t}
               />
 
               {selectedStop ? (
@@ -347,11 +413,13 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
                     nextTime={nextTime}
                     currentMinutes={currentMinutes}
                     globalStatus={globalBusStatus}
+                    t={t}
                   />
                   
                   <ScheduleGrid 
                     times={selectedStop.times}
                     currentMinutes={currentMinutes}
+                    t={t}
                   />
                 </div>
               ) : (
@@ -362,14 +430,14 @@ Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:5
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                      </svg>
                   </div>
-                  <p className="text-center font-medium text-slate-500">Selecciona una parada para<br/>ver la información en tiempo real.</p>
+                  <p className="text-center font-medium text-slate-500 max-w-[250px]">{t.selectPrompt}</p>
                 </div>
               )}
             </main>
 
             {/* Footer */}
             <footer className="w-full py-6 text-center text-slate-400 text-xs">
-              <p>Autobús Urbano de Tolosa</p>
+              <p>{t.footer}</p>
             </footer>
           </div>
         );
