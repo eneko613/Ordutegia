@@ -2,18 +2,24 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <!-- Fix para GitHub Pages en subdirectorios  -->
     <base href="./" />
-    <link rel="icon" type="image/svg+xml" href="vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tolosa Hiribusa</title>
+    
+    <!-- React & ReactDOM (UMD - Versión estándar para navegadores) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel para traducir JSX/TS en el navegador -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              // Definición de Cyan para toda la app
               primary: {
                 50: '#ecfeff',
                 100: '#cffafe',
@@ -31,12 +37,21 @@
         }
       }
     </script>
+    
+    <style>
+      /* Animaciones simples */
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.4s ease-out forwards;
+      }
+    </style>
   <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@18.2.0",
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-    "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
     "react/": "https://aistudiocdn.com/react@^19.2.0/"
   }
@@ -45,6 +60,327 @@
 </head>
   <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
+
+    <!-- Lógica de la Aplicación -->
+    <script type="text/babel">
+      const { useState, useEffect, useMemo } = React;
+
+      // --- CONSTANTS ---
+      const RAW_BUS_DATA = `Larramendi 11, 7:10, 7:50, 8:17, 8:54, 9:38, 10:13, 10:48, 11:53, 12:28, 13:03, 13:38, 14:20, 14:58, 15:35, 16:10, 16:47, 17:22, 17:57, 18:49, 19:24, 19:59, 20:34, 21:03;
+Larramendi 3, 7:11, 8:18, 8:55, 9:39, 10:14, 10:49, 11:54, 12:29, 13:04, 13:39, 14:21, 14:59, 15:36, 16:11, 16:48, 17:23, 17:58, 18:50, 19:25, 20:00, 20:35, 21:04;
+Musika Eskola, 7:13, 7:53, 8:22, 9:08, 9:43, 10:18, 11:23, 11:58, 12:33, 13:08, 13:43, 14:23, 15:03, 15:40, 16:15, 16:52, 17:27, 18:19, 18:54, 19:29, 20:04, 20:37, 21:06;
+San Frantzisko eliza, 7:15, 8:24, 9:09, 9:45, 10:20, 11:25, 12:00, 12:35, 13:10, 13:45, 14:24, 15:05, 15:42, 16:17, 16:54, 17:29, 18:21, 18:56, 19:31, 20:06, 20:38, 21:07;
+Geltoki, 7:18, 7:55, 8:27, 9:11, 9:48, 10:23, 11:28, 12:03, 12:38, 13:13, 13:48, 14:25, 15:08, 15:45, 16:20, 16:57, 17:32, 18:24, 18:59, 19:34, 20:09, 20:40, 21:09;
+Araba Etorbidea 5, 7:21, 8:30, 9:13, 9:51, 10:26, 11:31, 12:06, 12:41, 13:16, 13:51, 14:27, 15:11, 15:48, 16:23, 17:00, 17:35, 18:27, 19:02, 19:37, 20:12, 20:42, 21:11;
+Iurre auzoa, 7:22, 7:58, 8:31, 9:14, 9:52, 10:27, 11:32, 12:07, 12:42, 13:17, 13:52, 14:29, 15:12, 15:49, 16:24, 17:01, 17:36, 18:28, 19:03, 19:38, 20:13, 20:43, 21:12;
+Paper Kalea, 7:24, 8:33, 9:16, 9:54, 10:29, 11:34, 12:09, 12:44, 13:19, 13:54, 14:31, 15:14, 15:51, 16:26, 17:03, 17:38, 18:30, 19:05, 19:40, 20:15, 20:44, 21:13;
+Martin Jose Iraola, 7:25, 8:34, 9:17, 9:55, 10:30, 11:35, 12:10, 12:45, 13:20, 13:55, 14:32, 15:15, 15:52, 16:27, 17:04, 17:39, 18:31, 19:06, 19:41, 20:16, 20:45, 21:14;
+Iurramendi Sarrera, 7:26, 8:35, 9:19, 9:56, 10:31, 11:36, 12:11, 12:46, 13:21, 13:56, 14:34, 15:16, 15:53, 16:28, 17:05, 17:40, 18:32, 19:07, 19:42, 20:17, 20:47, 21:16;
+Usabal Kiroldegia, 7:28, 8:37, 9:21, 9:58, 10:33, 11:38, 12:13, 12:48, 13:23, 13:58, 14:35, 15:18, 15:55, 16:30, 17:07, 17:42, 18:34, 19:09, 19:44, 20:19, 20:49, 21:18;
+Beilatokia, 7:28, 8:37, 9:23, 9:59, 10:34, 11:39, 12:14, 12:49, 13:24, 13:59, 14:37, 15:19, 15:56, 16:31, 17:08, 17:43, 18:35, 19:10, 19:45, 20:20, 20:51, 21:20;
+Usabal Industrigunea, 7:29, 8:05, 8:38, 9:24, 9:59, 10:34, 11:39, 12:14, 12:49, 13:24, 13:59, 14:37, 15:19, 15:56, 16:31, 17:08, 17:43, 18:35, 19:10, 19:45, 20:20, 20:51, 21:20;
+Iruña etorbidea Amarotz, 8:06;
+Amarotz 11, 7:30, 8:39, 9:25, 10:00, 10:35, 11:40, 12:15, 12:50, 13:25, 14:00, 14:38, 15:20, 15:57, 16:32, 17:09, 17:44, 18:36, 19:11, 19:46, 20:21, 20:52, 21:21;
+Amarotz 30, 7:31, 8:40, 9:26, 10:01, 10:36, 11:41, 12:16, 12:51, 13:26, 14:01, 14:39, 15:21, 15:58, 16:33, 17:10, 17:45, 18:37, 19:12, 19:47, 20:22, 20:53, 21:22;
+Amarotz 29, 7:32, 8:41, 9:27, 10:02, 10:37, 11:42, 12:17, 12:52, 13:27, 14:02, 14:39, 15:22, 15:59, 16:34, 17:11, 17:46, 18:38, 19:13, 19:48, 20:23, 20:54, 21:23;
+San Blas, 7:33, 8:42, 9:28, 10:03, 10:38, 11:43, 12:18, 12:53, 13:28, 14:03, 14:40, 15:23, 16:00, 16:35, 17:12, 17:47, 18:39, 19:14, 19:49, 20:24, 20:55, 21:24;
+Iparragirre, 7:34, 8:43, 9:29, 10:04, 10:39, 11:44, 12:19, 12:54, 13:29, 14:04, 14:41, 15:24, 16:01, 16:36, 17:13, 17:48, 18:40, 19:15, 19:50, 20:25, 20:56, 21:25;
+Herrikide Escolapioak, 7:36, 14:43;
+Bizkaia Kalea, 7:40, 8:44, 9:30, 10:05, 10:40, 11:45, 12:20, 12:55, 13:30, 14:05, 14:47, 15:25, 16:02, 16:37, 17:14, 17:49, 18:41, 19:16, 19:51, 20:26, 20:57, 21:26;
+Kondeaneko Aldapa 3, 7:42, 8:09, 8:46, 9:32, 10:07, 10:42, 11:47, 12:22, 12:57, 13:32, 14:07, 14:48, 15:27, 16:04, 16:39, 17:16, 17:51, 18:43, 19:18, 19:53, 20:28, 20:58, 21:27;
+Santa Klara, 7:43, 8:47, 9:33, 10:08, 10:43, 11:48, 12:23, 12:58, 13:33, 14:08, 14:49, 15:28, 16:05, 16:40, 17:17, 17:52, 18:44, 19:19, 19:54, 20:29, 20:59, 21:28;
+Klinika, 7:44, 8:48, 9:34, 10:09, 10:44, 11:49, 12:24, 12:59, 13:34, 14:09, 14:50, 15:29, 16:06, 16:41, 17:18, 17:53, 18:45, 19:20, 19:55, 20:30, 21:00, 21:29;`;
+
+      // --- UTILS ---
+      const timeToMinutes = (timeStr) => {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return hours * 60 + minutes;
+      };
+
+      const getCurrentMinutes = () => {
+        const now = new Date();
+        return now.getHours() * 60 + now.getMinutes();
+      };
+
+      const parseBusData = (rawData) => {
+        const lines = rawData.split(';').filter(line => line.trim().length > 0);
+        return lines.map((line, index) => {
+          const parts = line.split(',').map(p => p.trim());
+          const name = parts[0];
+          const times = parts.slice(1).filter(t => t);
+          times.sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
+          return { id: index, name, times };
+        });
+      };
+
+      const getSystemEvents = (stops) => {
+        const events = [];
+        stops.forEach(stop => {
+          stop.times.forEach(time => {
+            events.push({
+              stopName: stop.name,
+              time,
+              minutesFromMidnight: timeToMinutes(time)
+            });
+          });
+        });
+        return events.sort((a, b) => a.minutesFromMidnight - b.minutesFromMidnight);
+      };
+
+      const formatTimeRemaining = (minutes) => {
+        if (minutes === 0) return "Ahora";
+        if (minutes < 60) return `${minutes} min`;
+        const hrs = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return `${hrs}h ${mins}min`;
+      };
+
+      // --- COMPONENTS ---
+
+      // StopSelect Component
+      const StopSelect = ({ stops, selectedStopId, onSelect }) => {
+        const handleChange = (e) => {
+          onSelect(Number(e.target.value));
+        };
+
+        return (
+          <div className="w-full mb-6">
+            <label htmlFor="stop-select" className="block text-sm font-medium text-slate-700 mb-2">
+              Seleccionar Parada
+            </label>
+            <div className="relative">
+              <select
+                id="stop-select"
+                value={selectedStopId === null ? '' : selectedStopId}
+                onChange={handleChange}
+                className="block w-full appearance-none rounded-lg border border-slate-300 bg-white px-4 py-3 pr-8 text-base shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm text-slate-800"
+              >
+                <option value="" disabled>-- Elige una parada --</option>
+                {stops.map((stop) => (
+                  <option key={stop.id} value={stop.id}>
+                    {stop.name}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      // NextBusCard Component
+      const NextBusCard = ({ nextTime, currentMinutes, globalStatus }) => {
+        if (!nextTime) {
+          return (
+            <div className="w-full bg-slate-200 rounded-2xl p-6 mb-6 text-center shadow-inner">
+              <p className="text-slate-500 font-medium">No hay más salidas hoy</p>
+            </div>
+          );
+        }
+
+        const arrivalMinutes = timeToMinutes(nextTime);
+        const diff = arrivalMinutes - currentMinutes;
+        const timeRemainingStr = formatTimeRemaining(diff);
+
+        return (
+          <div className="w-full bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl p-6 mb-6 text-white shadow-lg relative overflow-hidden">
+            <div className="relative z-10">
+              <div className="flex justify-between items-start mb-2">
+                <span className="text-primary-100 font-medium text-sm uppercase tracking-wide">Próximo Autobús</span>
+                <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-semibold shadow-sm">
+                  {timeRemainingStr}
+                </div>
+              </div>
+
+              <div className="flex items-baseline mt-2 mb-6">
+                <span className="text-6xl font-bold tracking-tighter drop-shadow-sm">{nextTime}</span>
+              </div>
+
+              {/* Global Bus Location Indicator */}
+              <div className="pt-4 border-t border-white/20">
+                <div className="flex items-center gap-3">
+                   <div className="relative flex h-3 w-3 flex-shrink-0">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                    </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-primary-100 font-medium uppercase mb-0.5">Estado del Servicio</p>
+                    <p className="text-sm font-bold truncate leading-tight">
+                      {globalStatus.status === 'FINISHED' && "Fuera de servicio"}
+                      {globalStatus.status === 'AT_STOP' && (
+                        <span>
+                          En parada: <span className="text-white">{globalStatus.targetStopName}</span>
+                        </span>
+                      )}
+                      {globalStatus.status === 'APPROACHING' && (
+                        <span>
+                          Llegando a: <span className="text-white">{globalStatus.targetStopName}</span>
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      // ScheduleGrid Component
+      const ScheduleGrid = ({ times, currentMinutes }) => {
+        const isPast = (time) => timeToMinutes(time) < currentMinutes;
+
+        return (
+          <div className="w-full bg-white rounded-xl shadow-md p-5 border border-slate-100">
+            <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+              <svg className="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Horario del día
+            </h3>
+            <div className="grid grid-cols-4 gap-3 sm:grid-cols-6 md:grid-cols-8">
+              {times.map((time, idx) => {
+                const past = isPast(time);
+                return (
+                  <div
+                    key={`${time}-${idx}`}
+                    className={`
+                      text-center py-2 px-1 rounded-lg text-sm font-medium transition-colors
+                      ${past 
+                        ? 'bg-slate-50 text-slate-400 line-through decoration-slate-300' 
+                        : 'bg-primary-50 text-primary-700 hover:bg-primary-100 border border-primary-100'}
+                    `}
+                  >
+                    {time}
+                  </div>
+                );
+              })}
+            </div>
+            {times.length === 0 && (
+              <p className="text-slate-400 text-center text-sm py-4">No hay horarios disponibles.</p>
+            )}
+          </div>
+        );
+      };
+
+      // Main App Component
+      const App = () => {
+        const [stops, setStops] = useState([]);
+        const [selectedStopId, setSelectedStopId] = useState(null);
+        const [currentMinutes, setCurrentMinutes] = useState(getCurrentMinutes());
+
+        useEffect(() => {
+          const parsedData = parseBusData(RAW_BUS_DATA);
+          setStops(parsedData);
+        }, []);
+
+        useEffect(() => {
+          const interval = setInterval(() => {
+            setCurrentMinutes(getCurrentMinutes());
+          }, 30000);
+          return () => clearInterval(interval);
+        }, []);
+
+        const selectedStop = useMemo(() => {
+          if (selectedStopId === null) return null;
+          return stops.find(s => s.id === selectedStopId) || null;
+        }, [selectedStopId, stops]);
+
+        const nextTime = useMemo(() => {
+          if (!selectedStop) return null;
+          return selectedStop.times.find(time => timeToMinutes(time) >= currentMinutes) || null;
+        }, [selectedStop, currentMinutes]);
+
+        const globalBusStatus = useMemo(() => {
+          if (stops.length === 0) return { status: 'FINISHED' };
+
+          const allEvents = getSystemEvents(stops);
+          const nextEvent = allEvents.find(event => event.minutesFromMidnight >= currentMinutes);
+
+          if (!nextEvent) {
+            return { status: 'FINISHED' };
+          }
+
+          if (nextEvent.minutesFromMidnight === currentMinutes) {
+            return {
+              status: 'AT_STOP',
+              targetStopName: nextEvent.stopName
+            };
+          }
+
+          return {
+            status: 'APPROACHING',
+            targetStopName: nextEvent.stopName
+          };
+        }, [stops, currentMinutes]);
+
+        return (
+          <div className="min-h-screen bg-slate-50 flex flex-col items-center">
+            {/* Header */}
+            <header className="w-full bg-primary-600 text-white shadow-md sticky top-0 z-50">
+              <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-center relative">
+                  <h1 className="text-xl font-bold tracking-tight flex items-center gap-2">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    Tolosa Hiribusa
+                  </h1>
+              </div>
+            </header>
+
+            {/* Main Content */}
+            <main className="w-full max-w-md px-4 py-6 flex-1 flex flex-col">
+              
+              <StopSelect 
+                stops={stops} 
+                selectedStopId={selectedStopId} 
+                onSelect={setSelectedStopId} 
+              />
+
+              {selectedStop ? (
+                <div className="animate-fade-in-up">
+                  <NextBusCard 
+                    nextTime={nextTime}
+                    currentMinutes={currentMinutes}
+                    globalStatus={globalBusStatus}
+                  />
+                  
+                  <ScheduleGrid 
+                    times={selectedStop.times}
+                    currentMinutes={currentMinutes}
+                  />
+                </div>
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center text-slate-400 mt-10">
+                  <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-300">
+                     <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                     </svg>
+                  </div>
+                  <p className="text-center font-medium text-slate-500">Selecciona una parada para<br/>ver la información en tiempo real.</p>
+                </div>
+              )}
+            </main>
+
+            {/* Footer */}
+            <footer className="w-full py-6 text-center text-slate-400 text-xs">
+              <p>Autobús Urbano de Tolosa</p>
+            </footer>
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    </script>
   </body>
 </html>
