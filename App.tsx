@@ -44,6 +44,7 @@ function App() {
     const allEvents = getSystemEvents(stops);
     
     // Find the very next event in the whole system relative to now
+    // If exact match, it is at the stop. If greater, it is approaching that stop.
     const nextEvent = allEvents.find(event => event.minutesFromMidnight >= currentMinutes);
 
     if (!nextEvent) {
@@ -67,16 +68,13 @@ function App() {
     <div className="min-h-screen bg-slate-50 flex flex-col items-center">
       {/* Header */}
       <header className="w-full bg-primary-600 text-white shadow-md sticky top-0 z-50">
-        <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                </svg>
-                <h1 className="text-xl font-bold tracking-tight">Tolosa Hiribusa</h1>
-            </div>
-            <div className="text-xs font-medium bg-primary-700 px-2 py-1 rounded">
-                BETA
-            </div>
+        <div className="max-w-md mx-auto px-4 py-4 flex items-center justify-center relative">
+            <h1 className="text-xl font-bold tracking-tight flex items-center gap-2">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              Tolosa Hiribusa
+            </h1>
         </div>
       </header>
 
@@ -104,18 +102,20 @@ function App() {
           </div>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-slate-400 mt-10">
-            <svg className="w-16 h-16 mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <p className="text-center font-medium">Selecciona una parada para<br/>ver la información en tiempo real.</p>
+            <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-300">
+               <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+               </svg>
+            </div>
+            <p className="text-center font-medium text-slate-500">Selecciona una parada para<br/>ver la información en tiempo real.</p>
           </div>
         )}
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-6 text-center text-slate-400 text-sm">
-        <p>&copy; {new Date().getFullYear()} Tolosa Hiribusa</p>
+      <footer className="w-full py-6 text-center text-slate-400 text-xs">
+        <p>Autobús Urbano de Tolosa</p>
       </footer>
     </div>
   );
